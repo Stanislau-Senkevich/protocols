@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package permissions;
+
+option go_package = "hakeyn.sso.v1;ssov1";
+
+service Permissions {
+  rpc IsAdmin(IsAdminRequest) returns (IsAdminResponse);
+}
+
+message IsAdminRequest {
+  int64 user_id = 1;
+}
+
+message IsAdminResponse {
+  bool is_admin = 1;
+}
