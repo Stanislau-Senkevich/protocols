@@ -23,6 +23,7 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type UserInfoClient interface {
 	GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error)
+	GetUserInfoByID(ctx context.Context, in *GetUserInfoByIDRequest, opts ...grpc.CallOption) (*GetUserInfoByIDResponse, error)
 	UpdateUserInfo(ctx context.Context, in *UpdateUserInfoRequest, opts ...grpc.CallOption) (*UpdateUserInfoResponse, error)
 	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error)
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
@@ -39,6 +40,15 @@ func NewUserInfoClient(cc grpc.ClientConnInterface) UserInfoClient {
 func (c *userInfoClient) GetUserInfo(ctx context.Context, in *GetUserInfoRequest, opts ...grpc.CallOption) (*GetUserInfoResponse, error) {
 	out := new(GetUserInfoResponse)
 	err := c.cc.Invoke(ctx, "/userinfo.UserInfo/GetUserInfo", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userInfoClient) GetUserInfoByID(ctx context.Context, in *GetUserInfoByIDRequest, opts ...grpc.CallOption) (*GetUserInfoByIDResponse, error) {
+	out := new(GetUserInfoByIDResponse)
+	err := c.cc.Invoke(ctx, "/userinfo.UserInfo/GetUserInfoByID", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,6 +87,7 @@ func (c *userInfoClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, 
 // for forward compatibility
 type UserInfoServer interface {
 	GetUserInfo(context.Context, *GetUserInfoRequest) (*GetUserInfoResponse, error)
+	GetUserInfoByID(context.Context, *GetUserInfoByIDRequest) (*GetUserInfoByIDResponse, error)
 	UpdateUserInfo(context.Context, *UpdateUserInfoRequest) (*UpdateUserInfoResponse, error)
 	ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
@@ -89,6 +100,9 @@ type UnimplementedUserInfoServer struct {
 
 func (UnimplementedUserInfoServer) GetUserInfo(context.Context, *GetUserInfoRequest) (*GetUserInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfo not implemented")
+}
+func (UnimplementedUserInfoServer) GetUserInfoByID(context.Context, *GetUserInfoByIDRequest) (*GetUserInfoByIDResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetUserInfoByID not implemented")
 }
 func (UnimplementedUserInfoServer) UpdateUserInfo(context.Context, *UpdateUserInfoRequest) (*UpdateUserInfoResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateUserInfo not implemented")
@@ -126,6 +140,24 @@ func _UserInfo_GetUserInfo_Handler(srv interface{}, ctx context.Context, dec fun
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(UserInfoServer).GetUserInfo(ctx, req.(*GetUserInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserInfo_GetUserInfoByID_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetUserInfoByIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserInfoServer).GetUserInfoByID(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/userinfo.UserInfo/GetUserInfoByID",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserInfoServer).GetUserInfoByID(ctx, req.(*GetUserInfoByIDRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -194,6 +226,10 @@ var UserInfo_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetUserInfo",
 			Handler:    _UserInfo_GetUserInfo_Handler,
+		},
+		{
+			MethodName: "GetUserInfoByID",
+			Handler:    _UserInfo_GetUserInfoByID_Handler,
 		},
 		{
 			MethodName: "UpdateUserInfo",

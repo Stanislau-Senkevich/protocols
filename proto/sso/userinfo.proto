@@ -8,16 +8,29 @@ option go_package = "hakeyn.sso.v1;ssov1";
 
 service UserInfo {
   rpc GetUserInfo(GetUserInfoRequest) returns (GetUserInfoResponse);
+  rpc GetUserInfoByID(GetUserInfoByIDRequest) returns (GetUserInfoByIDResponse);
   rpc UpdateUserInfo(UpdateUserInfoRequest) returns (UpdateUserInfoResponse);
   rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
   rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
 }
 
 message GetUserInfoRequest {
-  int64 user_id = 1;
+
 }
 
 message GetUserInfoResponse {
+  string email = 1;
+  string phone_number = 2;
+  string name = 3;
+  string surname = 4;
+  google.protobuf.Timestamp registered_at = 5;
+}
+
+message GetUserInfoByIDRequest {
+  int64 user_id = 1;
+}
+
+message GetUserInfoByIDResponse {
   string email = 1;
   string phone_number = 2;
   string name = 3;
