@@ -14,9 +14,7 @@ service UserInfo {
   rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
 }
 
-message GetUserInfoRequest {
-
-}
+message GetUserInfoRequest {}
 
 message GetUserInfoResponse {
   string email = 1;
@@ -39,11 +37,10 @@ message GetUserInfoByIDResponse {
 }
 
 message UpdateUserInfoRequest {
-  int64 user_id = 1;
-  string new_email = 2;
-  string new_phone_number = 3;
-  string new_name = 4;
-  string new_surname = 5;
+  string new_email = 1;
+  string new_phone_number = 2;
+  string new_name = 3;
+  string new_surname = 4;
 }
 
 message UpdateUserInfoResponse {
@@ -51,9 +48,8 @@ message UpdateUserInfoResponse {
 }
 
 message ChangePasswordRequest {
-  int64 user_id = 1;
-  string old_password = 2;
-  string new_password = 3;
+  string old_password = 1;
+  string new_password = 2;
 }
 
 message ChangePasswordResponse {
