@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package family;
+
+option go_package = "hakeyn.family.v1;famv1";
+
+service Invite {
+  rpc SendInvite(SendInviteRequest) returns (SendInviteResponse);
+  rpc AcceptInvite(AcceptInviteRequest) returns (AcceptInviteResponse);
+  rpc DenyInvite(DenyInviteRequest) returns (DenyInviteResponse);
+}
+
+message SendInviteRequest {
+  int64 family_id = 1;
+  int64 user_id = 2;
+}
+
+message SendInviteResponse {
+  bool succeed = 1;
+}
+
+message AcceptInviteRequest {
+  int64 invite_id = 1;
+}
+
+message AcceptInviteResponse {
+  int64 family_id = 1;
+}
+
+message DenyInviteRequest {
+  int64 invite_id = 1;
+}
+
+message DenyInviteResponse {
+  bool succeed = 1;
+}

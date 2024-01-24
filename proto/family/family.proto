@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package family;
+
+option go_package = "hakeyn.family.v1;famv1";
+
+service Family {
+  rpc CreateFamily(CreateFamilyRequest) returns (CreateFamilyResponse);
+  rpc LeaveFamily(LeaveFamilyRequest) returns (LeaveFamilyResponse);
+  rpc GetFamilyInfo(GetFamilyInfoRequest) returns (GetFamilyInfoResponse);
+}
+
+message CreateFamilyRequest {}
+
+message CreateFamilyResponse {
+  int64 family_id = 1;
+}
+
+message LeaveFamilyRequest {
+  int64 family_id = 1;
+}
+
+message LeaveFamilyResponse {
+  bool succeed = 1;
+}
+
+message GetFamilyInfoRequest {
+  int64 family_id = 1;
+}
+
+message UserInfo {
+  int64 user_id = 1;
+  string email = 2;
+  string phone_number = 3;
+  string name = 4;
+  string surname = 5;
+  google.protobuf.Timestamp registered_at = 6;
+}
+
+message GetFamilyInfoResponse {
+  repeated UserInfo info = 1;
+}
