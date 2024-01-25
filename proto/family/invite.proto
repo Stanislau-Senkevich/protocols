@@ -29,7 +29,7 @@ message SendInviteRequest {
 }
 
 message SendInviteResponse {
-  bool succeed = 1;
+  int64 invite_id = 1;
 }
 
 message AcceptInviteRequest {
