@@ -26,6 +26,8 @@ type UserInfoClient interface {
 	GetUserInfoByID(ctx context.Context, in *GetUserInfoByIDRequest, opts ...grpc.CallOption) (*GetUserInfoByIDResponse, error)
 	UpdateUserInfo(ctx context.Context, in *UpdateUserInfoRequest, opts ...grpc.CallOption) (*UpdateUserInfoResponse, error)
 	ChangePassword(ctx context.Context, in *ChangePasswordRequest, opts ...grpc.CallOption) (*ChangePasswordResponse, error)
+	AddFamily(ctx context.Context, in *AddFamilyRequest, opts ...grpc.CallOption) (*AddFamilyResponse, error)
+	DeleteFamily(ctx context.Context, in *DeleteFamilyRequest, opts ...grpc.CallOption) (*DeleteFamilyResponse, error)
 	DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error)
 }
 
@@ -73,6 +75,24 @@ func (c *userInfoClient) ChangePassword(ctx context.Context, in *ChangePasswordR
 	return out, nil
 }
 
+func (c *userInfoClient) AddFamily(ctx context.Context, in *AddFamilyRequest, opts ...grpc.CallOption) (*AddFamilyResponse, error) {
+	out := new(AddFamilyResponse)
+	err := c.cc.Invoke(ctx, "/userinfo.UserInfo/AddFamily", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *userInfoClient) DeleteFamily(ctx context.Context, in *DeleteFamilyRequest, opts ...grpc.CallOption) (*DeleteFamilyResponse, error) {
+	out := new(DeleteFamilyResponse)
+	err := c.cc.Invoke(ctx, "/userinfo.UserInfo/DeleteFamily", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *userInfoClient) DeleteUser(ctx context.Context, in *DeleteUserRequest, opts ...grpc.CallOption) (*DeleteUserResponse, error) {
 	out := new(DeleteUserResponse)
 	err := c.cc.Invoke(ctx, "/userinfo.UserInfo/DeleteUser", in, out, opts...)
@@ -90,6 +110,8 @@ type UserInfoServer interface {
 	GetUserInfoByID(context.Context, *GetUserInfoByIDRequest) (*GetUserInfoByIDResponse, error)
 	UpdateUserInfo(context.Context, *UpdateUserInfoRequest) (*UpdateUserInfoResponse, error)
 	ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error)
+	AddFamily(context.Context, *AddFamilyRequest) (*AddFamilyResponse, error)
+	DeleteFamily(context.Context, *DeleteFamilyRequest) (*DeleteFamilyResponse, error)
 	DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error)
 	mustEmbedUnimplementedUserInfoServer()
 }
@@ -109,6 +131,12 @@ func (UnimplementedUserInfoServer) UpdateUserInfo(context.Context, *UpdateUserIn
 }
 func (UnimplementedUserInfoServer) ChangePassword(context.Context, *ChangePasswordRequest) (*ChangePasswordResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ChangePassword not implemented")
+}
+func (UnimplementedUserInfoServer) AddFamily(context.Context, *AddFamilyRequest) (*AddFamilyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddFamily not implemented")
+}
+func (UnimplementedUserInfoServer) DeleteFamily(context.Context, *DeleteFamilyRequest) (*DeleteFamilyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteFamily not implemented")
 }
 func (UnimplementedUserInfoServer) DeleteUser(context.Context, *DeleteUserRequest) (*DeleteUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteUser not implemented")
@@ -198,6 +226,42 @@ func _UserInfo_ChangePassword_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _UserInfo_AddFamily_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddFamilyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserInfoServer).AddFamily(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/userinfo.UserInfo/AddFamily",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserInfoServer).AddFamily(ctx, req.(*AddFamilyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _UserInfo_DeleteFamily_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteFamilyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(UserInfoServer).DeleteFamily(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/userinfo.UserInfo/DeleteFamily",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(UserInfoServer).DeleteFamily(ctx, req.(*DeleteFamilyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _UserInfo_DeleteUser_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(DeleteUserRequest)
 	if err := dec(in); err != nil {
@@ -238,6 +302,14 @@ var UserInfo_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ChangePassword",
 			Handler:    _UserInfo_ChangePassword_Handler,
+		},
+		{
+			MethodName: "AddFamily",
+			Handler:    _UserInfo_AddFamily_Handler,
+		},
+		{
+			MethodName: "DeleteFamily",
+			Handler:    _UserInfo_DeleteFamily_Handler,
 		},
 		{
 			MethodName: "DeleteUser",

@@ -11,6 +11,8 @@ service UserInfo {
   rpc GetUserInfoByID(GetUserInfoByIDRequest) returns (GetUserInfoByIDResponse);
   rpc UpdateUserInfo(UpdateUserInfoRequest) returns (UpdateUserInfoResponse);
   rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
+  rpc AddFamily(AddFamilyRequest) returns (AddFamilyResponse);
+  rpc DeleteFamily(DeleteFamilyRequest) returns (DeleteFamilyResponse);
   rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse);
 }
 
@@ -53,6 +55,24 @@ message ChangePasswordRequest {
 }
 
 message ChangePasswordResponse {
+  bool succeed = 1;
+}
+
+message AddFamilyRequest {
+  int64 user_id = 1;
+  int64 family_id = 2;
+}
+
+message AddFamilyResponse {
+  bool succeed = 1;
+}
+
+message DeleteFamilyRequest {
+  int64 user_id = 1;
+  int64 family_id = 2;
+}
+
+message DeleteFamilyResponse {
   bool succeed = 1;
 }
 
