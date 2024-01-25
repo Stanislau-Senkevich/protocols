@@ -5,9 +5,22 @@ package family;
 option go_package = "hakeyn.family.v1;famv1";
 
 service Invite {
+  rpc GetInvites(GetInvitesRequest) returns (GetInvitesResponse);
   rpc SendInvite(SendInviteRequest) returns (SendInviteResponse);
   rpc AcceptInvite(AcceptInviteRequest) returns (AcceptInviteResponse);
   rpc DenyInvite(DenyInviteRequest) returns (DenyInviteResponse);
+}
+
+message GetInvitesRequest {}
+
+message InviteModel {
+  int64 invite_id = 1;
+  int64 family_id = 2;
+  int64 user_id = 3;
+}
+
+message GetInvitesResponse{
+  repeated InviteModel invites = 1;
 }
 
 message SendInviteRequest {

@@ -22,6 +22,7 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type InviteClient interface {
+	GetInvites(ctx context.Context, in *GetInvitesRequest, opts ...grpc.CallOption) (*GetInvitesResponse, error)
 	SendInvite(ctx context.Context, in *SendInviteRequest, opts ...grpc.CallOption) (*SendInviteResponse, error)
 	AcceptInvite(ctx context.Context, in *AcceptInviteRequest, opts ...grpc.CallOption) (*AcceptInviteResponse, error)
 	DenyInvite(ctx context.Context, in *DenyInviteRequest, opts ...grpc.CallOption) (*DenyInviteResponse, error)
@@ -33,6 +34,15 @@ type inviteClient struct {
 
 func NewInviteClient(cc grpc.ClientConnInterface) InviteClient {
 	return &inviteClient{cc}
+}
+
+func (c *inviteClient) GetInvites(ctx context.Context, in *GetInvitesRequest, opts ...grpc.CallOption) (*GetInvitesResponse, error) {
+	out := new(GetInvitesResponse)
+	err := c.cc.Invoke(ctx, "/family.Invite/GetInvites", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *inviteClient) SendInvite(ctx context.Context, in *SendInviteRequest, opts ...grpc.CallOption) (*SendInviteResponse, error) {
@@ -66,6 +76,7 @@ func (c *inviteClient) DenyInvite(ctx context.Context, in *DenyInviteRequest, op
 // All implementations must embed UnimplementedInviteServer
 // for forward compatibility
 type InviteServer interface {
+	GetInvites(context.Context, *GetInvitesRequest) (*GetInvitesResponse, error)
 	SendInvite(context.Context, *SendInviteRequest) (*SendInviteResponse, error)
 	AcceptInvite(context.Context, *AcceptInviteRequest) (*AcceptInviteResponse, error)
 	DenyInvite(context.Context, *DenyInviteRequest) (*DenyInviteResponse, error)
@@ -76,6 +87,9 @@ type InviteServer interface {
 type UnimplementedInviteServer struct {
 }
 
+func (UnimplementedInviteServer) GetInvites(context.Context, *GetInvitesRequest) (*GetInvitesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetInvites not implemented")
+}
 func (UnimplementedInviteServer) SendInvite(context.Context, *SendInviteRequest) (*SendInviteResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SendInvite not implemented")
 }
@@ -96,6 +110,24 @@ type UnsafeInviteServer interface {
 
 func RegisterInviteServer(s grpc.ServiceRegistrar, srv InviteServer) {
 	s.RegisterService(&Invite_ServiceDesc, srv)
+}
+
+func _Invite_GetInvites_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetInvitesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InviteServer).GetInvites(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/family.Invite/GetInvites",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InviteServer).GetInvites(ctx, req.(*GetInvitesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _Invite_SendInvite_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -159,6 +191,10 @@ var Invite_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "family.Invite",
 	HandlerType: (*InviteServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "GetInvites",
+			Handler:    _Invite_GetInvites_Handler,
+		},
 		{
 			MethodName: "SendInvite",
 			Handler:    _Invite_SendInvite_Handler,
