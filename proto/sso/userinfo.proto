@@ -19,11 +19,12 @@ service UserInfo {
 message GetUserInfoRequest {}
 
 message GetUserInfoResponse {
-  string email = 1;
-  string phone_number = 2;
-  string name = 3;
-  string surname = 4;
-  google.protobuf.Timestamp registered_at = 5;
+  int64 user_id = 1;
+  string email = 2;
+  string phone_number = 3;
+  string name = 4;
+  string surname = 5;
+  google.protobuf.Timestamp registered_at = 6;
 }
 
 message GetUserInfoByIDRequest {
@@ -31,11 +32,12 @@ message GetUserInfoByIDRequest {
 }
 
 message GetUserInfoByIDResponse {
-  string email = 1;
-  string phone_number = 2;
-  string name = 3;
-  string surname = 4;
-  google.protobuf.Timestamp registered_at = 5;
+  int64 user_id = 1;
+  string email = 2;
+  string phone_number = 3;
+  string name = 4;
+  string surname = 5;
+  google.protobuf.Timestamp registered_at = 6;
 }
 
 message UpdateUserInfoRequest {
