@@ -26,6 +26,7 @@ type InviteClient interface {
 	SendInvite(ctx context.Context, in *SendInviteRequest, opts ...grpc.CallOption) (*SendInviteResponse, error)
 	AcceptInvite(ctx context.Context, in *AcceptInviteRequest, opts ...grpc.CallOption) (*AcceptInviteResponse, error)
 	DenyInvite(ctx context.Context, in *DenyInviteRequest, opts ...grpc.CallOption) (*DenyInviteResponse, error)
+	DeleteUserInvites(ctx context.Context, in *DeleteUserInvitesRequest, opts ...grpc.CallOption) (*DeleteUserInvitesResponse, error)
 }
 
 type inviteClient struct {
@@ -72,6 +73,15 @@ func (c *inviteClient) DenyInvite(ctx context.Context, in *DenyInviteRequest, op
 	return out, nil
 }
 
+func (c *inviteClient) DeleteUserInvites(ctx context.Context, in *DeleteUserInvitesRequest, opts ...grpc.CallOption) (*DeleteUserInvitesResponse, error) {
+	out := new(DeleteUserInvitesResponse)
+	err := c.cc.Invoke(ctx, "/family.Invite/DeleteUserInvites", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // InviteServer is the server API for Invite service.
 // All implementations must embed UnimplementedInviteServer
 // for forward compatibility
@@ -80,6 +90,7 @@ type InviteServer interface {
 	SendInvite(context.Context, *SendInviteRequest) (*SendInviteResponse, error)
 	AcceptInvite(context.Context, *AcceptInviteRequest) (*AcceptInviteResponse, error)
 	DenyInvite(context.Context, *DenyInviteRequest) (*DenyInviteResponse, error)
+	DeleteUserInvites(context.Context, *DeleteUserInvitesRequest) (*DeleteUserInvitesResponse, error)
 	mustEmbedUnimplementedInviteServer()
 }
 
@@ -98,6 +109,9 @@ func (UnimplementedInviteServer) AcceptInvite(context.Context, *AcceptInviteRequ
 }
 func (UnimplementedInviteServer) DenyInvite(context.Context, *DenyInviteRequest) (*DenyInviteResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DenyInvite not implemented")
+}
+func (UnimplementedInviteServer) DeleteUserInvites(context.Context, *DeleteUserInvitesRequest) (*DeleteUserInvitesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteUserInvites not implemented")
 }
 func (UnimplementedInviteServer) mustEmbedUnimplementedInviteServer() {}
 
@@ -184,6 +198,24 @@ func _Invite_DenyInvite_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Invite_DeleteUserInvites_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteUserInvitesRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(InviteServer).DeleteUserInvites(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/family.Invite/DeleteUserInvites",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(InviteServer).DeleteUserInvites(ctx, req.(*DeleteUserInvitesRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Invite_ServiceDesc is the grpc.ServiceDesc for Invite service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -206,6 +238,10 @@ var Invite_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DenyInvite",
 			Handler:    _Invite_DenyInvite_Handler,
+		},
+		{
+			MethodName: "DeleteUserInvites",
+			Handler:    _Invite_DeleteUserInvites_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

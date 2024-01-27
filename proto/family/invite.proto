@@ -9,6 +9,7 @@ service Invite {
   rpc SendInvite(SendInviteRequest) returns (SendInviteResponse);
   rpc AcceptInvite(AcceptInviteRequest) returns (AcceptInviteResponse);
   rpc DenyInvite(DenyInviteRequest) returns (DenyInviteResponse);
+  rpc DeleteUserInvites(DeleteUserInvitesRequest) returns (DeleteUserInvitesResponse);
 }
 
 message GetInvitesRequest {}
@@ -45,5 +46,13 @@ message DenyInviteRequest {
 }
 
 message DenyInviteResponse {
+  bool succeed = 1;
+}
+
+message DeleteUserInvitesRequest {
+  int64 user_id = 1;
+}
+
+message DeleteUserInvitesResponse {
   bool succeed = 1;
 }
